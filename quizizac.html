@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Παιχνίδι Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #121212;
+      color: #ffffff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .container {
+      background: #1e1e1e;
+      width: 95%;
+      max-width: 650px;
+      padding: 30px;
+      border-radius: 25px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+      text-align: center;
+    }
+
+    .question {
+      font-size: 1.6rem;
+      margin-bottom: 25px;
+    }
+
+    .option {
+      background: #333333;
+      color: #ffffff;
+      padding: 22px;
+      margin: 15px 0;
+      border-radius: 14px;
+      cursor: pointer;
+      font-size: 1.3rem;
+      transition: 0.2s;
+    }
+
+    .option:hover { background: #444444; }
+    .correct { background: #00c853 !important; }
+    .incorrect { background: #d50000 !important; }
+
+    #nextBtn, #restartBtn {
+      width: 100%;
+      padding: 20px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 14px;
+      font-size: 1.3rem;
+      cursor: pointer;
+      margin-top: 25px;
+      display: none;
+    }
+
+    .logo {
+      max-width: 250px;
+      margin-bottom: 20px;
+      filter: brightness(0) invert(1);
+    }
+  </style>
+</head>
+<body>
+
+  <img src="https://en.cap3000.com/-/media/cap3000/images/enseignes/logos/logo-344x193-izac.png?as=0&w=650&hash=AE5A248996E63F39F340260C1389582D" class="logo" alt="IZAC Logo">
+
+  <div class="container" id="quizContainer">
+    <h1>Παιχνίδι Quiz</h1>
+    <div id="questionBox" class="question"></div>
+    <div id="options"></div>
+    <button id="nextBtn" onclick="nextQuestion()">Επόμενο</button>
+    <button id="restartBtn" onclick="restartQuiz()">Ξεκίνησε ξανά</button>
+  </div>
+
+<script>
+  const quiz = [
+    { q: "Σε ποιο έτος ιδρύθηκε η IZAC Paris;", options: ["2003", "1990", "2010", "2006"], answer: 0 },
+    { q: "Για ποια προϊόντα είναι γνωστή η IZAC Paris;", options: ["Πολυτελή ρολόγια", "Ανδρική μόδα", "Αθλητικός εξοπλισμός", "Αρώματα"], answer: 1 },
+    { q: "Με ποια ομάδα συνεργάστηκε η IZAC Paris για μια συλλογή το 2024;", options: ["Paris FC", "Olympique Lyonnais", "Stade Rennais", "Marseille"], answer: 1 },
+    { q: "Ποια χρώματα συνδέονται με την Olympique Lyonnais;", options: ["Κόκκινο & Χρυσό", "Μπλε, Λευκό & Κόκκινο", "Μαύρο & Κίτρινο", "Πράσινο & Λευκό"], answer: 1 },
+    { q: "Ποιο χρώμα κυριαρχεί στην Stade Rennais;", options: ["Πράσινο", "Μπλε", "Κόκκινο & Μαύρο", "Κίτρινο"], answer: 2 },
+    { q: "Πού βρίσκεται η έδρα της IZAC Paris;", options: ["Λυών", "Παρίσι", "Ρεν", "Μασσαλία"], answer: 1 },
+    { q: "Ποιο άθλημα συνδέει την IZAC Paris με την Olympique Lyonnais και την Stade Rennais;", options: ["Μπάσκετ", "Τένις", "Ποδόσφαιρο", "Ράγκμπι"], answer: 2 }
+  ];
+
+  let current = 0;
+  let score = 0;
+  let locked = false;
+
+  function loadQuestion() {
+    locked = false;
+    nextBtn.style.display = "none";
+    restartBtn.style.display = "none";
+
+    const q = quiz[current];
+    questionBox.textContent = q.q;
+    options.innerHTML = "";
+
+    q.options.forEach((opt, index) => {
+      const div = document.createElement("div");
+      div.className = "option";
+      div.textContent = opt;
+      div.onclick = () => selectOption(div, index);
+      options.appendChild(div);
+    });
+  }
+
+  function selectOption(div, index) {
+    if (locked) return;
+    locked = true;
+
+    const correctIndex = quiz[current].answer;
+
+    if (index === correctIndex) {
+      div.classList.add("correct");
+      score++;
+    } else {
+      div.classList.add("incorrect");
+      options.children[correctIndex].classList.add("correct");
+    }
+
+    nextBtn.style.display = "block";
+  }
+
+  function nextQuestion() {
+    current++;
+    if (current >= quiz.length) {
+      questionBox.textContent = `Το quiz ολοκληρώθηκε! Σκορ: ${score} / ${quiz.length}`;
+      options.innerHTML = "";
+      nextBtn.style.display = "none";
+      restartBtn.style.display = "block";
+    } else {
+      loadQuestion();
+    }
+  }
+
+  function restartQuiz() {
+    current = 0;
+    score = 0;
+    loadQuestion();
+  }
+
+  loadQuestion();
+</script>
+</body>
+</html>
