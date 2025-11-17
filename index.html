@@ -5,21 +5,24 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <title>Παιχνίδι Quiz</title>
 <style>
-  /* Basic Reset */
+  /* Reset */
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
+  /* Body styling with scroll */
   body {
     font-family: Arial, sans-serif;
     background: #121212;
-    color: #ffffff;
+    color: #fff;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start; /* keep content at top */
     flex-direction: column;
     min-height: 100vh;
     padding: 1rem;
+    overflow-y: auto; /* enable vertical scroll */
   }
 
+  /* Container styling */
   .container {
     background: #1e1e1e;
     width: 100%;
@@ -28,8 +31,10 @@
     border-radius: 25px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.6);
     text-align: center;
+    margin-top: 1rem; /* space from top */
   }
 
+  /* Logo */
   .logo {
     max-width: 250px;
     width: 50%;
@@ -37,14 +42,16 @@
     filter: brightness(0) invert(1);
   }
 
+  /* Question */
   .question {
     font-size: clamp(1.2rem, 2vw, 1.6rem);
     margin-bottom: 1.5rem;
   }
 
+  /* Options */
   .option {
-    background: #333333;
-    color: #ffffff;
+    background: #333;
+    color: #fff;
     padding: clamp(15px, 2vw, 22px);
     margin: 10px 0;
     border-radius: 14px;
@@ -53,15 +60,16 @@
     transition: 0.2s;
   }
 
-  .option:hover { background: #444444; }
+  .option:hover { background: #444; }
   .correct { background: #00c853 !important; }
   .incorrect { background: #d50000 !important; }
 
-  #nextBtn, #restartBtn {
+  /* Buttons */
+  #nextBtn, #restartBtn, #fullscreenBtn {
     width: 100%;
     padding: clamp(15px, 2vw, 20px);
     background: #007bff;
-    color: white;
+    color: #fff;
     border: none;
     border-radius: 14px;
     font-size: clamp(1rem, 1.5vw, 1.3rem);
@@ -70,22 +78,28 @@
     display: none;
   }
 
-  /* Small devices adjustments */
+  #fullscreenBtn { display: block; margin-bottom: 1rem; }
+
+  /* Media queries for small screens */
   @media (max-width: 480px) {
     .container { padding: 1.5rem; }
     .logo { width: 60%; }
   }
 
   @media (min-width: 481px) and (max-width: 768px) {
-    .container { padding: 2rem; }
     .logo { width: 40%; }
   }
 </style>
 </head>
 <body>
 
+<!-- Fullscreen Button -->
+<button id="fullscreenBtn" onclick="toggleFullscreen()">Fullscreen</button>
+
+<!-- Logo -->
 <img src="https://en.cap3000.com/-/media/cap3000/images/enseignes/logos/logo-344x193-izac.png?as=0&w=650&hash=AE5A248996E63F39F340260C1389582D" class="logo" alt="IZAC Logo">
 
+<!-- Quiz Container -->
 <div class="container" id="quizContainer">
   <h1>Παιχνίδι Quiz</h1>
   <div id="questionBox" class="question"></div>
@@ -95,6 +109,7 @@
 </div>
 
 <script>
+/* Quiz Data */
 const quiz = [
   { q: "Σε ποιο έτος ιδρύθηκε η IZAC Paris;", options: ["2003", "1990", "2010", "2006"], answer: 0 },
   { q: "Για ποια προϊόντα είναι γνωστή η IZAC Paris;", options: ["Πολυτελή ρολόγια", "Ανδρική μόδα", "Αθλητικός εξοπλισμός", "Αρώματα"], answer: 1 },
@@ -105,15 +120,13 @@ const quiz = [
   { q: "Ποιο άθλημα συνδέει την IZAC Paris με την Olympique Lyonnais και την Stade Rennais;", options: ["Μπάσκετ", "Τένις", "Ποδόσφαιρο", "Ράγκμπι"], answer: 2 }
 ];
 
-let current = 0;
-let score = 0;
-let locked = false;
-
+let current = 0, score = 0, locked = false;
 const questionBox = document.getElementById('questionBox');
 const options = document.getElementById('options');
 const nextBtn = document.getElementById('nextBtn');
 const restartBtn = document.getElementById('restartBtn');
 
+/* Load Question */
 function loadQuestion() {
   locked = false;
   nextBtn.style.display = "none";
@@ -132,6 +145,7 @@ function loadQuestion() {
   });
 }
 
+/* Select Option */
 function selectOption(div, index) {
   if (locked) return;
   locked = true;
@@ -149,6 +163,7 @@ function selectOption(div, index) {
   nextBtn.style.display = "block";
 }
 
+/* Next Question */
 function nextQuestion() {
   current++;
   if (current >= quiz.length) {
@@ -161,13 +176,32 @@ function nextQuestion() {
   }
 }
 
+/* Restart Quiz */
 function restartQuiz() {
   current = 0;
   score = 0;
   loadQuestion();
 }
 
+/* Load first question */
 loadQuestion();
+
+/* Fullscreen Function */
+function toggleFullscreen() {
+  const docEl = document.documentElement;
+
+  if (!document.fullscreenElement) {
+    if (docEl.requestFullscreen) { docEl.requestFullscreen(); }
+    else if (docEl.webkitRequestFullscreen) { docEl.webkitRequestFullscreen(); }
+    else if (docEl.mozRequestFullScreen) { docEl.mozRequestFullScreen(); }
+    else if (docEl.msRequestFullscreen) { docEl.msRequestFullscreen(); }
+  } else {
+    if (document.exitFullscreen) { document.exitFullscreen(); }
+    else if (document.webkitExitFullscreen) { document.webkitExitFullscreen(); }
+    else if (document.mozCancelFullScreen) { document.mozCancelFullScreen(); }
+    else if (document.msExitFullscreen) { document.msExitFullscreen(); }
+  }
+}
 </script>
 </body>
 </html>
