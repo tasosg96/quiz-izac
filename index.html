@@ -14,13 +14,32 @@
     background: #121212;
     color: #fff;
     display: flex;
-    justify-content: center;
-    align-items: flex-start; /* keep content at top */
+    justify-content: center; /* horizontal center */
+    align-items: center;    /* vertical center */
     flex-direction: column;
     min-height: 100vh;
     padding: 1rem;
-    overflow-y: auto; /* enable vertical scroll */
+    overflow-y: auto; /* enable scroll if content overflows */
+    position: relative;
   }
+
+  /* Fullscreen button floating top-right */
+  #fullscreenBtn {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    border-radius: 8px;
+    background: #28a745;
+    color: white;
+    border: none;
+    cursor: pointer;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+  }
+  #fullscreenBtn:hover { opacity: 1; }
 
   /* Container styling */
   .container {
@@ -31,7 +50,6 @@
     border-radius: 25px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.6);
     text-align: center;
-    margin-top: 1rem; /* space from top */
   }
 
   /* Logo */
@@ -59,13 +77,12 @@
     font-size: clamp(1rem, 1.5vw, 1.3rem);
     transition: 0.2s;
   }
-
   .option:hover { background: #444; }
   .correct { background: #00c853 !important; }
   .incorrect { background: #d50000 !important; }
 
-  /* Buttons */
-  #nextBtn, #restartBtn, #fullscreenBtn {
+  /* Quiz buttons */
+  #nextBtn, #restartBtn {
     width: 100%;
     padding: clamp(15px, 2vw, 20px);
     background: #007bff;
@@ -78,14 +95,11 @@
     display: none;
   }
 
-  #fullscreenBtn { display: block; margin-bottom: 1rem; }
-
   /* Media queries for small screens */
   @media (max-width: 480px) {
     .container { padding: 1.5rem; }
     .logo { width: 60%; }
   }
-
   @media (min-width: 481px) and (max-width: 768px) {
     .logo { width: 40%; }
   }
@@ -93,8 +107,8 @@
 </head>
 <body>
 
-<!-- Fullscreen Button -->
-<button id="fullscreenBtn" onclick="toggleFullscreen()">Fullscreen</button>
+<!-- Fullscreen Button floating top-right -->
+<button id="fullscreenBtn" onclick="toggleFullscreen()">⛶</button>
 
 <!-- Logo -->
 <img src="https://en.cap3000.com/-/media/cap3000/images/enseignes/logos/logo-344x193-izac.png?as=0&w=650&hash=AE5A248996E63F39F340260C1389582D" class="logo" alt="IZAC Logo">
